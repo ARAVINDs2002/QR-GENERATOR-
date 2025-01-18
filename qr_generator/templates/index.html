@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        /* Make the body a full-height section with the video background */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Background video */
+        video.background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Header Styling */
+        header {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: fixed; /* Fixed position to stay at the top */
+            top: 0; /* Aligns it at the top */
+            z-index: 10; /* Ensures it stays above other content */
+        }
+
+        header img {
+            height: 40px;
+            margin-right: 20px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        /* Container for QR code form */
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            margin-top: 80px; /* Added space for fixed header */
+            z-index: 1;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 36px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Button Styling with Animation */
+        button {
+            padding: 10px 20px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c409c4;
+            transform: scale(1.1); /* Zoom effect on hover */
+        }
+
+        .counter {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Link Area Styling */
+        .link-area {
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .link-area a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .link-area a:hover {
+            color: #c409c4;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Video -->
+    <video class="background-video" autoplay loop muted>
+    <source src="https://raw.githubusercontent.com/ARAVINDs2002/ignore-backups/main/159053-818026314_small.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <header>
+        <h1>QR Code Generator</h1>
+    </header>
+
+    <div class="container">
+        <h1><span style="color: darkblue;">QR</span> Code Generator</h1>
+        <p>Generate your own QR Codes</p>
+        <form id="qrForm">
+            <input type="text" id="data" name="data" placeholder="Enter data" required>
+            <button type="submit">Generate QR Code</button>
+        </form>
+        <div id="message" style="color: red;"></div>
+        
+        <!-- Link Area for additional content -->
+        <div class="link-area">
+            <p>For more information, <a href="https://www.linkedin.com/in/aravind-s-77a668202/" target="_blank"><span style="color: darkblue;">Contact the Developer</span></a>.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('qrForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/generate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'qrcode.png';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                document.getElementById('message').textContent = error.error;
+            });
+        });
+    </script>
+
+</body>
+</html>
