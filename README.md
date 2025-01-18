@@ -2,7 +2,7 @@
 A simple and effective QR code generator app implemented using python,flask,library as core.The user can run this code by installing necessary components from the requirement .txt files and enter their info.click on generate qr code and the qr will be saved automatically.
 Features
 
-Generate QR codes from user-inputted data.
+# Generate QR codes from user-inputted data-
 
 Download the generated QR code as a PNG file.
 
